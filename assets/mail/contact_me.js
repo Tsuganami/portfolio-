@@ -9,10 +9,46 @@ $(function () {
         submitSuccess: function ($form, event) {
             event.preventDefault(); // prevent default submit behaviour
             // get values from FORM
-            var name = $("input#name").val();
-            var email = $("input#email").val();
-            var phone = $("input#phone").val();
-            var message = $("textarea#message").val();
+            var name = $("input#name").val().trim();
+            var email = $("input#email").val().trim();
+            var phone = $("input#phone").val().trim();
+            var message = $("textarea#message").val().trim();
+
+            // --- Client-side validation ---
+            var errors = [];
+
+            // Name: at least 2 characters, letters/spaces only
+            if (name.length < 2) {
+                errors.push("Name must be at least 2 characters.");
+            }
+
+            // Email: must contain @ and a dot after @
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                errors.push("Please enter a valid email address (must contain @ and a domain).");
+            }
+
+            // Phone: digits, spaces, dashes, parens, optional leading +, at least 7 digits
+            var phoneDigits = phone.replace(/\D/g, "");
+            if (phoneDigits.length < 7) {
+                errors.push("Please enter a valid phone number (at least 7 digits).");
+            }
+
+            // Message: at least 10 characters
+            if (message.length < 10) {
+                errors.push("Message must be at least 10 characters.");
+            }
+
+            if (errors.length > 0) {
+                $("#success").html(
+                    "<div class='alert alert-danger'><strong>" +
+                    errors.join("<br>") +
+                    "</strong></div>"
+                );
+                return;
+            }
+            // --- End validation ---
+
             var firstName = name; // For Success/Failure Message
             // Check for white space in name for Success/Fail message
             if (firstName.indexOf(" ") >= 0) {

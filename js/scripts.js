@@ -51,4 +51,19 @@
     navbarCollapse();
     // Collapse the navbar when page is scrolled
     $(window).scroll(navbarCollapse);
+
+    // Scroll percentage counter
+    function updateScrollPercent() {
+        var scrollTop = $(window).scrollTop();
+        var docHeight = $(document).height() - $(window).height();
+        var percent = docHeight > 0 ? Math.round((scrollTop / docHeight) * 100) : 0;
+        $('#scrollPercent').text(percent + '%');
+        if (percent >= 100) {
+            $('#scrollThanks').fadeIn(400);
+        } else {
+            $('#scrollThanks').fadeOut(200);
+        }
+    }
+    updateScrollPercent();
+    $(window).scroll(updateScrollPercent);
 })(jQuery); // End of use strict
